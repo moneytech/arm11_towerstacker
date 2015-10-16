@@ -1,0 +1,56 @@
+\documentclass[11pt]{article}
+
+\usepackage{fullpage}
+
+\begin{document}
+
+\title{ARM Checkpoint Report}
+\author{Kam Chiu, Ho Law, Jiranart Vacheesuthum, Vasin Wongrassamee}
+
+\maketitle
+
+\section{Group Organisation}
+
+We coordinated our work and arranged group meetings using group chat on Whatsapp. Communication has worked well and we are able to discuss various problems in our code together. We push our code to git regularly so that other members can see the changes we've made, and through our group chat, we are able to share useful code and help each other debug their code.
+
+\section{Work Division}
+
+Our work on coding the ARM emulator was initially split based on the different sections outlined in the task specification provided. Each group member was responsible for one of the four types of ARM instructions. The member in charge of handling branch instructions was also tasked with coding the binary loader. 
+
+\medskip
+
+However, as we began our work, we realised that it was helpful for everyone to understand the structure of memory, instructions and registers in our emulator. Hence we decided to work on the binary loader, memory and register structures together. We also agreed on the structure of the pipeline and how the execution of an instruction would be represented by a method call. Then we proceeded to complete the implementations of data processing instructions, multiply instructions, single data transfer instructions and branch instructions respectively. 
+
+\medskip
+
+In reflection, we could have saved some time by first working together on utility functions used in implementing every type of ARM instruction, such as checking binary numbers. We did realise this issue half way through our work, and eliminated the code duplication by creating shared utility functions. We also realise that the work division between group members was not perfect, as the workload of implementing the branch instructions along with the pipeline was relatively light, and future task allocation should consider balancing out the workloads more carefully. 
+
+\section{Implementation Strategies}
+
+Our emulator has the initialisation code in the Main function in emulate.c. The binary file loader loads 32 bit instructions into an array of unsigned long ints. This array is stored in the heap, and represents the main memory. The register structure is also initialised. The register structure includes 13 general purpose registers, the PC and CPSR. They are represented as another array of unsigned long ints, stored on the stack because of its fixed, relatively small size. The pipeline is a simple structure consisting of two unsinged long ints.
+
+\medskip
+
+The pipeline fetches instructions and increments the PC as described in the specification. An "execute" method takes each instruction and checks the condition specified against the CPSR. It then matches bit patterns to determine the type of instruction to be executed, and calls the respective method. The whole instruction is then passed as an argument. 
+
+\medskip
+
+This structure roughly resembles our work division, as each method called handles a different type of ARM instruction. Each method extracts any flags, opcodes, registers and offsets required by that specific instruction type from the instruction given. The branch instruction is handled locally due to its extensisve interactions with the pipeline and the PC.
+
+\medskip
+
+In reflection, the instructions could have been decoded in the pipeline instead of being passed as a whole into different methods. That would result in a more complicated implementation of the pipeline, but simpler methods to handle different ARM instructions. As each individual method had to read bits off the instruction, we made general utility methods to avoid code duplication. 
+
+\medskip
+
+We think that some of the utility methods mentioned above can possibly be reused in the assembler. Some helpful methods related to bitwise operations can be used in constructing instructions, and the method for printing bits can be reused to create the binary output for the assembler.
+
+\section{Challenges in implementation tasks}
+
+Looking ahead, debugging our code will be a challenging task we have to face. As each member of the group will be implementing a section of the code, it will be crucial to ensure that these separate parts can function as one. Debugging our code together will be less difficult if we include helpful commenting to let other members understand what is going on. Keeping the code style clean and tidy, avoiding magic numbers will also improve the readability of our code when debugging. Lastly, we should learn how to use a debugging tool.
+
+\medskip
+
+Working on the Raspberry Pi is also challenging because none of our group members have had previous experience using the Raspberry Pi. We should do some background reading, and allow extra time during this part to familiarise ourselves with the device.
+
+\end{document}
